@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI in Games — Tic-Tac-Toe Minimax Showcase</title>
+    <meta name="description" content="Showcasing AI and software projects including a Tic-Tac-Toe AI using the Minimax algorithm. Demonstrates Python programming, algorithm design, game theory, and version control.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Animated background particles -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- Navigation -->
+    <nav id="main-nav">
+        <div class="nav-container">
+            <a href="#hero" class="nav-logo">
+                <span class="logo-icon">🎮</span>
+                <span class="logo-text">AI<span class="accent">inGames</span></span>
+            </a>
+            <div class="nav-links">
+                <a href="#hero" class="nav-link active">Home</a>
+                <a href="#game" class="nav-link">Play</a>
+                <a href="#algorithm" class="nav-link">Algorithm</a>
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#code" class="nav-link">Code</a>
+            </div>
+            <a href="https://github.com/justinsaroshthomas/aiingames" target="_blank" class="nav-github">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>GitHub</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero">
+        <div class="hero-content">
+            <div class="hero-badge">🤖 Artificial Intelligence × Game Theory</div>
+            <h1>Unbeatable <span class="gradient-text">Tic-Tac-Toe</span> AI</h1>
+            <p class="hero-subtitle">Experience the power of the <strong>Minimax Algorithm</strong> with Alpha-Beta pruning. A showcase of AI decision-making, game theory, and elegant algorithm design.</p>
+            <div class="hero-actions">
+                <a href="#game" class="btn btn-primary">
+                    <span>Play Against AI</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+                <a href="#algorithm" class="btn btn-secondary">
+                    <span>How It Works</span>
+                </a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-value">549,946</span>
+                    <span class="stat-label">Possible Game States</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat">
+                    <span class="stat-value">0%</span>
+                    <span class="stat-label">AI Loss Rate</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat">
+                    <span class="stat-value">O(b^d)</span>
+                    <span class="stat-label">Time Complexity</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Game Section -->
+    <section id="game">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-tag">Interactive Demo</span>
+                <h2>Play <span class="gradient-text">Tic-Tac-Toe</span></h2>
+                <p>Challenge the Minimax AI. Can you force a draw?</p>
+            </div>
+            <div class="game-layout">
+                <div class="game-panel">
+                    <div class="game-info">
+                        <div class="player-card" id="player-x-card">
+                            <div class="player-mark x-mark">X</div>
+                            <div class="player-details">
+                                <span class="player-name" id="player-x-name">You</span>
+                                <span class="player-score">Score: <strong id="score-x">0</strong></span>
+                            </div>
+                        </div>
+                        <div class="vs-badge">VS</div>
+                        <div class="player-card" id="player-o-card">
+                            <div class="player-mark o-mark">O</div>
+                            <div class="player-details">
+                                <span class="player-name" id="player-o-name">AI</span>
+                                <span class="player-score">Score: <strong id="score-o">0</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="game-status" class="game-status">Your turn — place X</div>
+                    <div class="board-container">
+                        <div id="board" class="board">
+                            <button class="cell" data-index="0"></button>
+                            <button class="cell" data-index="1"></button>
+                            <button class="cell" data-index="2"></button>
+                            <button class="cell" data-index="3"></button>
+                            <button class="cell" data-index="4"></button>
+                            <button class="cell" data-index="5"></button>
+                            <button class="cell" data-index="6"></button>
+                            <button class="cell" data-index="7"></button>
+                            <button class="cell" data-index="8"></button>
+                        </div>
+                        <div id="win-line" class="win-line"></div>
+                    </div>
+                    <div class="game-controls">
+                        <button id="btn-reset" class="btn btn-secondary btn-sm">🔄 New Game</button>
+                        <button id="btn-swap" class="btn btn-secondary btn-sm">🔀 Swap Sides</button>
+                    </div>
+                </div>
+                <div class="game-sidebar">
+                    <div class="ai-thinking" id="ai-thinking">
+                        <div class="thinking-header">
+                            <span class="thinking-dot"></span>
+                            <span>AI Decision Engine</span>
+                        </div>
+                        <div class="thinking-stats">
+                            <div class="think-stat">
+                                <span class="think-label">Nodes Evaluated</span>
+                                <span class="think-value" id="stat-nodes">—</span>
+                            </div>
+                            <div class="think-stat">
+                                <span class="think-label">Pruned Branches</span>
+                                <span class="think-value" id="stat-pruned">—</span>
+                            </div>
+                            <div class="think-stat">
+                                <span class="think-label">Best Score</span>
+                                <span class="think-value" id="stat-score">—</span>
+                            </div>
+                            <div class="think-stat">
+                                <span class="think-label">Think Time</span>
+                                <span class="think-value" id="stat-time">—</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="move-history">
+                        <h4>Move History</h4>
+                        <div id="move-list" class="move-list">
+                            <div class="move-empty">No moves yet</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Algorithm Section -->
+    <section id="algorithm">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-tag">Deep Dive</span>
+                <h2>The <span class="gradient-text">Minimax</span> Algorithm</h2>
+                <p>Understanding the decision-making engine behind the unbeatable AI</p>
+            </div>
+            <div class="algo-grid">
+                <div class="algo-card">
+                    <div class="algo-icon">🌳</div>
+                    <h3>Game Tree Exploration</h3>
+                    <p>Minimax recursively builds a complete game tree, exploring every possible sequence of moves from the current state to all terminal states (win, loss, or draw).</p>
+                </div>
+                <div class="algo-card">
+                    <div class="algo-icon">📊</div>
+                    <h3>Score Evaluation</h3>
+                    <p>Terminal states receive scores: <code>+10</code> for AI wins, <code>-10</code> for human wins, <code>0</code> for draws. Depth is factored in to prefer faster wins.</p>
+                </div>
+                <div class="algo-card">
+                    <div class="algo-icon">🔄</div>
+                    <h3>Maximize / Minimize</h3>
+                    <p>The AI <strong>maximizes</strong> its score on its turn and assumes the opponent will <strong>minimize</strong> it. This guarantees optimal play against any strategy.</p>
+                </div>
+                <div class="algo-card">
+                    <div class="algo-icon">✂️</div>
+                    <h3>Alpha-Beta Pruning</h3>
+                    <p>Eliminates branches that can't affect the final decision, reducing computation by up to <strong>50%</strong> while producing identical results.</p>
+                </div>
+            </div>
+            <!-- Pseudocode -->
+            <div class="pseudocode-block">
+                <div class="code-header">
+                    <span class="code-dot red"></span>
+                    <span class="code-dot yellow"></span>
+                    <span class="code-dot green"></span>
+                    <span class="code-title">minimax_algorithm.py</span>
+                </div>
+<pre class="code-content"><span class="kw">def</span> <span class="fn">minimax</span>(game, depth, is_maximizing, alpha, beta):
+    <span class="cm"># Base case: evaluate terminal states</span>
+    <span class="kw">if</span> game.check_winner() == ai_player:
+        <span class="kw">return</span> <span class="num">10</span> - depth     <span class="cm"># AI wins (prefer faster)</span>
+    <span class="kw">if</span> game.check_winner() == human:
+        <span class="kw">return</span> -<span class="num">10</span> + depth    <span class="cm"># Human wins</span>
+    <span class="kw">if</span> game.is_draw():
+        <span class="kw">return</span> <span class="num">0</span>              <span class="cm"># Draw</span>
+
+    <span class="kw">if</span> is_maximizing:
+        best = -∞
+        <span class="kw">for</span> move <span class="kw">in</span> available_moves:
+            score = <span class="fn">minimax</span>(game, depth+<span class="num">1</span>, <span class="kw">False</span>, alpha, beta)
+            best = <span class="fn">max</span>(best, score)
+            alpha = <span class="fn">max</span>(alpha, score)
+            <span class="kw">if</span> beta &lt;= alpha: <span class="kw">break</span>  <span class="cm"># ✂️ Prune!</span>
+        <span class="kw">return</span> best
+    <span class="kw">else</span>:
+        best = +∞
+        <span class="kw">for</span> move <span class="kw">in</span> available_moves:
+            score = <span class="fn">minimax</span>(game, depth+<span class="num">1</span>, <span class="kw">True</span>, alpha, beta)
+            best = <span class="fn">min</span>(best, score)
+            beta = <span class="fn">min</span>(beta, score)
+            <span class="kw">if</span> beta &lt;= alpha: <span class="kw">break</span>  <span class="cm"># ✂️ Prune!</span>
+        <span class="kw">return</span> best</pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-tag">Project Highlights</span>
+                <h2>Skills <span class="gradient-text">Demonstrated</span></h2>
+                <p>Technical competencies showcased in this project</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🐍</div>
+                    <h3>Python Programming</h3>
+                    <p>Clean, modular, PEP-8 compliant code with type hints, docstrings, and object-oriented design patterns.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🧠</div>
+                    <h3>Algorithm Design</h3>
+                    <p>Implementation of Minimax with Alpha-Beta pruning — a foundational AI algorithm used in chess engines and beyond.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Game Theory</h3>
+                    <p>Zero-sum game analysis with perfect information. The AI achieves Nash equilibrium — optimal play regardless of opponent strategy.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🧪</div>
+                    <h3>Testing & QA</h3>
+                    <p>Comprehensive unit test suite with 16 tests covering game logic, AI optimality, edge cases, and performance metrics.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <h3>Web Development</h3>
+                    <p>Interactive browser-based game with modern CSS, smooth animations, responsive design, and real-time AI visualization.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📦</div>
+                    <h3>Version Control</h3>
+                    <p>Well-structured Git repository with clear commit history, documentation, and collaborative development practices.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Code Section -->
+    <section id="code">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-tag">Source Code</span>
+                <h2>Project <span class="gradient-text">Structure</span></h2>
+                <p>Clean, well-documented, and modular codebase</p>
+            </div>
+            <div class="file-tree">
+                <div class="tree-item folder open">
+                    <span>📁 aiingames/</span>
+                    <div class="tree-children">
+                        <div class="tree-item folder open">
+                            <span>📁 tictactoe/</span>
+                            <div class="tree-children">
+                                <div class="tree-item file"><span>🐍 game.py</span><span class="file-desc">— Game engine & board logic</span></div>
+                                <div class="tree-item file"><span>🐍 ai.py</span><span class="file-desc">— Minimax AI with α-β pruning</span></div>
+                                <div class="tree-item file"><span>🐍 main.py</span><span class="file-desc">— Terminal game interface</span></div>
+                                <div class="tree-item file"><span>🐍 tests.py</span><span class="file-desc">— 16 unit tests</span></div>
+                            </div>
+                        </div>
+                        <div class="tree-item folder open">
+                            <span>📁 docs/</span>
+                            <div class="tree-children">
+                                <div class="tree-item file"><span>🌐 index.html</span><span class="file-desc">— This showcase website</span></div>
+                                <div class="tree-item file"><span>🎨 style.css</span><span class="file-desc">— Styling & animations</span></div>
+                                <div class="tree-item file"><span>⚡ app.js</span><span class="file-desc">— Game logic & AI (JS)</span></div>
+                            </div>
+                        </div>
+                        <div class="tree-item file"><span>📄 README.md</span><span class="file-desc">— Project documentation</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="cta-block">
+                <h3>Ready to explore the code?</h3>
+                <p>Dive into the source code, run the tests, or challenge the AI yourself.</p>
+                <div class="cta-actions">
+                    <a href="https://github.com/justinsaroshthomas/aiingames" target="_blank" class="btn btn-primary">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                        <span>View on GitHub</span>
+                    </a>
+                    <a href="#game" class="btn btn-secondary">
+                        <span>🎮 Play the Game</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-brand">
+                <span class="logo-icon">🎮</span>
+                <span class="logo-text">AI<span class="accent">inGames</span></span>
+            </div>
+            <p class="footer-text">Built by <strong>Justin Sarosh Thomas</strong> — Showcasing AI, algorithm design & software development.</p>
+            <div class="footer-links">
+                <a href="https://github.com/justinsaroshthomas/aiingames" target="_blank">GitHub</a>
+                <span>•</span>
+                <a href="#game">Play Game</a>
+                <span>•</span>
+                <a href="#algorithm">Algorithm</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
